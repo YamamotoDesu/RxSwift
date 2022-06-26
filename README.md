@@ -221,3 +221,4 @@ onNext: ab, A
 onNext: ab, AB
 onNext: ab, ABC
 ```
+注目すべき点は、repeatedPassword: PublishSubject<String>の値が変わっても、常にpassword: PublishSubject<String>の最新の値abのみを使っている点です。
