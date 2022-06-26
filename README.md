@@ -222,3 +222,40 @@ onNext: ab, AB
 onNext: ab, ABC
 ```
 注目すべき点は、repeatedPassword: PublishSubject<String>の値が変わっても、常にpassword: PublishSubject<String>の最新の値abのみを使っている点です。
+        
+
+-----
+
+## Zip
+```swift
+let intSubject = PublishSubject<Int>()
+let stringSubject = PublishSubject<String>()
+
+_ = Observable.zip(intSubject, stringSubject) {
+        "\($0) \($1)"
+    }
+    .subscribe(onNext: { print($0) })
+
+intSubject.onNext(1)
+intSubject.onNext(2)
+
+stringSubject.onNext("A")
+stringSubject.onNext("B”)
+stringSubject.onNext("C")
+stringSubject.onNext("D")
+
+intSubject.onNext(3)
+intSubject.onNext(4)
+```
+
+出力結果
+```
+1 A
+2 B
+3 C
+4 D
+```
+注目すべきことは、入力として実行する1,2,3,4の順序とA,B,C,Dのそれぞれの順序が、出力時にも揃っているということです。
+2のあとにAのデータが発生させていても、それは別々の順序のため関係ありません。ここで読者のみなさんが気になるのは、「zipは最新の値でないことで微妙に使いづらそうなんだけど何に使うの？」ということでしょう。
+もちろん、どちらかの値が最新ではない可能性があることを気にかける必要があります。そのためzipは最新結果の状態をチェックするのには向きません。
+実際は「イベントが揃ったら動作する仕組みとして割り切って使う」というのがよくある使われ方でしょう。
