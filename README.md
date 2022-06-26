@@ -49,6 +49,7 @@ RxSwift 研究読本1
             })
 ```
 
+------ 
 ## Observableを切り替えるflatMapLates
 ```swift
 validatedUsername = input.username
