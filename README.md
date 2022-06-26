@@ -1,6 +1,59 @@
+## Yamamoto Note  
+<table>
+  <tr>
+    <th width="30%">share(replay: 1)によるHot変換</th>
+  </tr>
+  <tr>
+    <td><div class="highlight highlight-source-swift"><pre>
+        let o: Observable<ValidationResult> = input.password
+            .map { password in
+                print("map:")
+                return validationService.validatePassword(password)
+            }
+            .share(replay: 1)
+        
+        _ = o
+            .subscribe(onNext: { _ in
+                print("onNext: s1") // map:
+                                    // onNext: s1
+            })
+        
+        _ = o
+            .subscribe(onNext: { _ in
+                print("onNext: s2")  // onNext: s2
+            })
+  </tr>
+  <tr>
+    <td>Cold Obserableのままだと</td>
+  </tr>
+  <tr>
+    <td width="30%"><div class="highlight highlight-source-swift"><pre>
+        let o: Observable<ValidationResult> = input.password
+            .map { password in
+                print("map:")
+                return validationService.validatePassword(password)
+            }
+<!--             .share(replay: 1) -->
+        
+        _ = o
+            .subscribe(onNext: { _ in
+                print("onNext: s1") // map:
+                                    // onNext: s1
+            })
+        
+        _ = o
+            .subscribe(onNext: { _ in
+                print("onNext: s2") // map: 
+                　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　// onNext: s2
+            })
+  </tr>
+</table>
+
+
 <p align="center">
 <img src="assets/RxSwift_Logo.png" width="35%" alt="RxSwift Logo" />
 <br />
+
 <a href="https://actions-badge.atrox.dev/ReactiveX/RxSwift/goto" target="_blank"><img src="https://github.com/ReactiveX/RxSwift/workflows/RxSwift/badge.svg?branch=main" alt="Build Status" /></a>
 <img src="https://img.shields.io/badge/platforms-iOS%20%7C%20macOS%20%7C%20tvOS%20%7C%20watchOS%20%7C%20Linux-333333.svg" alt="Supported Platforms: iOS, macOS, tvOS, watchOS & Linux" />
 <br />
