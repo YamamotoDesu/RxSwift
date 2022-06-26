@@ -75,11 +75,11 @@ flatMapLatestはユーザ名入力のイベントからユーザ名の文字列�
 
 <table>
   <tr>
-    <th width="30%">combineLatestの例</th>
+    <th width="30%">combineLatest</th>
     <th width="30%">In Action</th>
   </tr>
   <tr>
-    <td>Define search for GitHub repositories ...</td>
+    <td>combineLatestの例</td>
     <th rowspan="9"><img src="https://user-images.githubusercontent.com/47273077/175798414-610749c6-bdcd-410b-8d5a-f1a92c3fd284.gif"></th>
   </tr>
   <tr>
@@ -92,9 +92,6 @@ flatMapLatestはユーザ名入力のイベントからユーザ名の文字列�
   .share(replay: 1)
     </pre>
      </div></td>
-  </tr>
-  <tr>
-    <td>combineLatestとは</td>
   </tr>
   <tr>
     <td width="30%"><div class="highlight highlight-source-swift">
