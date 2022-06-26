@@ -108,3 +108,26 @@ ombineLatestは引数により2つの入力を受け取り、引数resultSelecto
 }
 ```
 クロージャの処理内容としては、引数に取る2つのストリームの文字列をタプルとして作成し、ユーザ名の文字列とパスワードの文字列を1つのusernameAndPassword: Observable<(username: String, password: String)>ストリームとしているだけです。このように、複数ストリームを合成したストリームにすることは、データをまとめて利便性を上げることもできます。
+
+-----
+## 最新の値を取得するwithLatestFrom
+合成されたパスワードの文字列とパスワード確認文字列のストリームはリスト4.2における「ViewModelの実装2_5」にて、サインアップボタンのイベントを伝達するloginTaps: Observable<Void>ストリームによって、withLatestFromオペレータでその最新のデータを取得されます。
+すなわち、ボタンを押されたタイミングをきっかけに、ユーザ名とパスワードの文字列を使って当初の目的であったサインアップ処理を行うイベントを作成したいわけです。
+```swift
+signedIn = input.loginTaps.withLatestFrom(usernameAndPassword)
+    .flatMapLatest { pair in
+        return API.signup(pair.username, password: pair.password)
+            .observeOn(MainScheduler.instance)
+            .catchErrorJustReturn(false)
+            .trackActivity(signingIn)
+    }
+    .flatMapLatest { loggedIn -> Observable<Bool> in
+        let message = loggedIn ? "Mock: Signed in to GitHub." : "Mock: failed"
+        return wireframe.promptFor(message, cancelAction: "OK", actions: [])
+            // propagate original value
+            .map { _ in
+                loggedIn
+            }
+    }
+    .share(replay: 1)
+```
