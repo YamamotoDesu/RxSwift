@@ -167,4 +167,21 @@ replayされないというのは、過去のイベントを一切保持せず�
  ```
 このコードでのDriverとObservableの違いは、share(replay: 1)メソッドを呼び出さずに済んでいる点だけで、これはDriverとして変換された時点ですでにHot Observable済みだからです。
 
+### Driverを切り替えるflatMapLatest
+```swift
         
+<!--            validatedUsername = input.username
+            .flatMapLatest { username in
+                return validationService.validateUsername(username)
+                    .observe(on:MainScheduler.instance)
+                    .catchAndReturn(.failed(message: "Error contacting server"))
+            }
+            .share(replay: 1) -->
+        
+            validatedUsername = input.username
+            .flatMapLatest { username in
+                return validationService.validateUsername(username)
+                    .asDriver(onErrorJustReturn: .failed(message: "Error contacting server"))
+            }
+
+```
