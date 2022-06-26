@@ -133,6 +133,16 @@ signedIn = input.loginTaps.withLatestFrom(usernameAndPassword)
 ```
 
 ------
+## Driverの特性について
+* エラーを伝達しないことを前提としている（onErrorが通知されない）
+* イベントはメインスレッドで観測されることを約束する
+* ストリームはHotに変換される（副作用が共有される）
+
+■ DriverとSignalの違い
+Driverは購読直後に過去のイベントを取得できる
+UITextFieldなどの現在の文字列をイベントとして取得
+
+Signalは購読後にイベントが発生してからでないと取得できない
 
 ### IBOutletなプロパティのDriverへの変換
 ```swift
