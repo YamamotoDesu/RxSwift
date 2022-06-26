@@ -197,3 +197,27 @@ replayされないというのは、過去のイベントを一切保持せず�
             }
 
 ```
+------
+## combineLatestでの合成
+```swift
+let password = PublishSubject<String>()
+let repeatedPassword = PublishSubject<String>()
+
+_ = Observable.combineLatest(password, repeatedPassword) { "\($0), \($1)"}
+      .subscribe(onNext: { print("onNext: ", $0) })
+
+password.onNext("a")
+password.onNext("ab")
+
+repeatedPassword.onNext("A")
+repeatedPassword.onNext("AB")
+repeatedPassword.onNext("ABC")
+ 
+```
+
+出力結果
+```
+onNext: ab, A
+onNext: ab, AB
+onNext: ab, ABC
+```
