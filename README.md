@@ -170,13 +170,15 @@ replayされないというのは、過去のイベントを一切保持せず�
 ### Driverを切り替えるflatMapLatest
 ```swift
         
-<!--            validatedUsername = input.username
+           <!--
+            validatedUsername = input.username
             .flatMapLatest { username in
                 return validationService.validateUsername(username)
                     .observe(on:MainScheduler.instance)
                     .catchAndReturn(.failed(message: "Error contacting server"))
             }
-            .share(replay: 1) -->
+            .share(replay: 1) 
+            -->
         
             validatedUsername = input.username
             .flatMapLatest { username in
