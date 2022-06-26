@@ -131,4 +131,20 @@ signedIn = input.loginTaps.withLatestFrom(usernameAndPassword)
     }
     .share(replay: 1)
 ```
-        
+
+------
+## IBOutletなプロパティのDriverへの変換
+```swift
+        // usernameOutlet.rx.text.orEmpty.asObservable()
+        username: usernameOutlet.rx.text.orEmpty.asDriver()
+```
+
+## IBOutletなプロパティのSignalへの変換
+```swift
+        // loginTaps: signupOutlet.rx.tap.asObservable()
+        loginTaps: signupOutlet.rx.tap.asSignal()
+```
+Signalの特性としては、Driverの特性にさらにreplayされないという特性を持っています。
+replayされないというのは、過去のイベントを一切保持せず、その値も保持していません。
+
+具体的にはDriverは購読直後にもし最新のイベントがあれば、そのイベントを流そうとしますが、Signalはそのような動作をしません。そのためUIButtonのタップイベントに向いているのです。replayしないという挙動があることを型で表現することは、コードの意図を人に伝えるという点においてとても意味のあることでしょう。
