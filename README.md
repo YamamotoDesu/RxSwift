@@ -99,6 +99,12 @@ ombineLatestは引数により2つの入力を受け取り、引数resultSelecto
     </div></td>
   </tr>
 </table>
-
         
-
+### combineLatestでこんなこともできる
+```swift
+ let usernameAndPassword
+  = Observable.combineLatest(input.username, input.password) {
+     (username: $0, password: $1)
+}
+```
+クロージャの処理内容としては、引数に取る2つのストリームの文字列をタプルとして作成し、ユーザ名の文字列とパスワードの文字列を1つのusernameAndPassword: Observable<(username: String, password: String)>ストリームとしているだけです。このように、複数ストリームを合成したストリームにすることは、データをまとめて利便性を上げることもできます。
