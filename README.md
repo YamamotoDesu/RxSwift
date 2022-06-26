@@ -138,7 +138,7 @@ signedIn = input.loginTaps.withLatestFrom(usernameAndPassword)
 * イベントはメインスレッドで観測されることを約束する
 * ストリームはHotに変換される（副作用が共有される）
 
-■ DriverとSignalの違い
+■ DriverとSignalの違い  
 Driverは購読直後に過去のイベントを取得できる
 UITextFieldなどの現在の文字列をイベントとして取得
 
