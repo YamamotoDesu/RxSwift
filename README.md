@@ -133,13 +133,14 @@ signedIn = input.loginTaps.withLatestFrom(usernameAndPassword)
 ```
 
 ------
-## IBOutletなプロパティのDriverへの変換
+
+### IBOutletなプロパティのDriverへの変換
 ```swift
         // usernameOutlet.rx.text.orEmpty.asObservable()
         username: usernameOutlet.rx.text.orEmpty.asDriver()
 ```
 
-## IBOutletなプロパティのSignalへの変換
+### IBOutletなプロパティのSignalへの変換
 ```swift
         // loginTaps: signupOutlet.rx.tap.asObservable()
         loginTaps: signupOutlet.rx.tap.asSignal()
@@ -148,3 +149,22 @@ Signalの特性としては、Driverの特性にさらにreplayされないと�
 replayされないというのは、過去のイベントを一切保持せず、その値も保持していません。
 
 具体的にはDriverは購読直後にもし最新のイベントがあれば、そのイベントを流そうとしますが、Signalはそのような動作をしません。そのためUIButtonのタップイベントに向いているのです。replayしないという挙動があることを型で表現することは、コードの意図を人に伝えるという点においてとても意味のあることでしょう。
+
+### Driverのmap変換
+```swift
+
+        <!--        
+            validatedPassword = input.password
+            .map { password in
+                return validationService.validatePassword(password)
+            }
+            .share(replay: 1) 
+        -->
+            validatedPassword = input.password
+            .map { password in
+                return validationService.validatePassword(password)
+            }
+ ```
+このコードでのDriverとObservableの違いは、share(replay: 1)メソッドを呼び出さずに済んでいる点だけで、これはDriverとして変換された時点ですでにHot Observable済みだからです。
+            }
+        
