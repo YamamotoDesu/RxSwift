@@ -166,5 +166,5 @@ replayされないというのは、過去のイベントを一切保持せず�
             }
  ```
 このコードでのDriverとObservableの違いは、share(replay: 1)メソッドを呼び出さずに済んでいる点だけで、これはDriverとして変換された時点ですでにHot Observable済みだからです。
-            }
+
         
