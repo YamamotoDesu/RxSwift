@@ -317,9 +317,7 @@ let sequenceThatErrors = Observable<String>.create { observer in
 }
 
 _ = sequenceThatErrors
-     // 1.
      .catchError { error in
-         // 2.
          if error is TestError {
             return Observable.just("Z")
         } else {
