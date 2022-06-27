@@ -355,7 +355,7 @@ onDisposed:
  }
 
  _ = sequenceThatErrors
-    .catchErrorJustReturn("Z") // 1.
+    .catchErrorJustReturn("Z") 
     .subscribe(onNext: {
         print("onNext: \($0)")
     }, onError: {
