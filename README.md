@@ -378,3 +378,36 @@ onDisposed:
 ## catchErrorJustReturnとcatchErrorの違い
 errorに応じて自由にストリームを返したい場合や要素を何も返したくない場合はcatchErrorを使い、任意の要素に置き換えたい場合はcatchErrorJustReturnを使うというのがユースケースでしょう。
 しかしcatchError/catchErrorJustReturnどちらを使っても、結果はエラー通知の置き換え後に正常終了します。購読側で細かくハンドリングできるというものではありません。多くの場合、プログラマ側があらかじめ予期するエラーに対して、ストリームの異常終了を防ぐために使われます。
+
+## materializeオペレータによる変換
+```swift
+let observable = Observable<String>.create { observer in
+     observer.onNext("A")
+     observer.onError(TestError.test)
+ 
+     return Disposables.create()
+}
+
+ _ = observable.materialize()
+     .subscribe(onNext: { (event: Event<String>) in
+        switch event {
+         case .next(let value):
+            print("value: \(value)")
+         case .error(let error):
+            print("error: \(error)")
+         case .completed:
+            break
+         }
+     }, onError: {
+        print("onError, onError: \($0)")
+    }, onCompleted: {
+        print("onCompleted:")
+    })
+```
+ 
+出力結果
+```
+value: A
+error: test
+onCompleted:
+```
