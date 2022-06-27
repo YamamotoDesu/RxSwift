@@ -261,3 +261,86 @@ intSubject.onNext(4)
 実際は「イベントが揃ったら動作する仕組みとして割り切って使う」というのがよくある使われ方でしょう。
 
 -------
+
+
+![image](https://user-images.githubusercontent.com/47273077/175941213-d6aee886-5750-4f2d-8204-5c0eee05de70.png)
+
+
+## エラー通知時に自動で再度購読を行うretryオペレータ
+```swift
+let sequenceThatErrors = Observable<String>.create { observer in
+    observer.onNext("A")
+
+    observer.onError(TestError.test)
+    print("Error encountered")
+
+    observer.onNext("B")
+    observer.onCompleted()
+
+    return Disposables.create()
+ }
+
+_ = sequenceThatErrors
+    .retry(3) // 1.
+    .subscribe(onNext: {
+         print("onNext: \($0)")
+     }, onError: {
+         print("onError: \($0)")
+     }, onCompleted: {
+         print("onCompleted:")
+     }, onDisposed: {
+         print("onDisposed:")
+     })
+```
+
+ログ出力結果
+```
+onNext: A
+Error encountered
+onNext: A
+Error encountered
+onNext: A
+Error encountered
+onError: test
+onDisposed:
+```
+
+## エラーを任意のデータによって(catchError)
+```swift
+let sequenceThatErrors = Observable<String>.create { observer in
+    observer.onNext("A")
+    observer.onError(TestError.test)
+    observer.onNext("B")
+    observer.onCompleted()
+
+    return Disposables.create()
+}
+
+_ = sequenceThatErrors
+     // 1.
+     .catchError { error in
+         // 2.
+         if error is TestError {
+            return Observable.just("Z")
+        } else {
+            return Observable.empty()
+        }
+    }
+    .subscribe(onNext: {
+        print("onNext: \($0)")
+     }, onError: {
+         print("onError: \($0)")
+     }, onCompleted: {
+         print("onCompleted:")
+     }, onDisposed: {
+         print("onDisposed:")
+})
+```
+
+出力結果
+```
+onNext: A
+onNext: Z
+onCompleted:
+onDisposed:
+```
