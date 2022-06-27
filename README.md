@@ -342,3 +342,35 @@ onNext: Z
 onCompleted:
 onDisposed:
 ```
+        
+## catchErrorJustReturn
+```swift
+ let sequenceThatErrors = Observable<String>.create { observer in
+    observer.onNext("A")
+    observer.onError(TestError.test)
+    observer.onNext("B")
+    observer.onCompleted()
+ 
+    return Disposables.create()
+ }
+
+ _ = sequenceThatErrors
+    .catchErrorJustReturn("Z") // 1.
+    .subscribe(onNext: {
+        print("onNext: \($0)")
+    }, onError: {
+        print("onError: \($0)")
+    }, onCompleted: {
+        print("onCompleted:")
+   }, onDisposed: {
+       print("onDisposed:")
+   })
+```
+        
+出力結果
+```
+onNext: A
+onNext: Z
+onCompleted:
+onDisposed:
+```
