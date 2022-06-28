@@ -509,3 +509,25 @@ errors, onNext: test
 errors, onCompleted:
 errors, onDisposed:
 ```
+        
+## elements()とerrors()メソッドにcompactMapを利用する
+```swift
+import RxSwift
+ 
+ extension ObservableType where Element: EventConvertible {
+
+     public func elements() -> Observable<Element.Element> {
+        return compactMap { $0.event.element }
+//        return filter { $0.event.element != nil }
+//            .map { $0.event.element! }
+    }
+
+     public func errors() -> Observable<Swift.Error> {
+         return compactMap { $0.event.error }
+//        return filter { $0.event.error != nil }
+//            .map { $0.event.error! }
+     }
+}
+
+```
+        
