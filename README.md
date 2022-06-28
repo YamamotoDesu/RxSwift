@@ -411,3 +411,41 @@ value: A
 error: test
 onCompleted:
 ```
+
+## ストリームの分岐
+```swift
+let result = observable.materialize()
+
+
+let elements = result
+    .filter { (event: Event<String>) in
+        event.element != nil
+    }
+    .map { (event: Event<String>) in
+        event.element!
+    }
+
+let errors = result
+    .filter { (event: Event<String>) in
+        event.error != nil
+    }
+    .map { (event: Event<String>) in
+        event.error!
+    }
+    
+ ```
+ 
+ ## Eventとは何か
+ EventはRxSwiftによって定義されているenumです
+ ```swift
+public enum Event<Element> {
+    /// Next element is produced.
+    case next(Element)
+
+    /// Sequence terminated with an error.
+    case error(Swift.Error)
+
+    /// Sequence completed successfully.
+    case completed
+}
+```
