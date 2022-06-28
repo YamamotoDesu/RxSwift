@@ -449,3 +449,63 @@ public enum Event<Element> {
     case completed
 }
 ```
+        
+## materializeしたものを分岐
+```swift
+let observable = Observable<String>.create { observer in
+     observer.onNext("A")
+     observer.onError(TestError.test)
+ 
+     return Disposables.create()
+ }
+
+let result = observable.materialize()
+
+let elements = result
+    .filter { (event: Event<String>) in
+         event.element != nil
+     }
+    .map { (event: Event<String>) in
+        event.element!
+     }
+        
+let errors = result
+     .filter { (event: Event<String>) in
+         event.error != nil
+    }
+    .map { (event: Event<String>) in
+        event.error!
+    }
+
+_ = elements
+    .subscribe(onNext: { (value: String) in
+        print("elements, onNext: \(value)")
+    }, onError: {
+        print("elements, onError: \($0)")
+    }, onCompleted: {
+        print("elements, onCompleted:")
+    }, onDisposed: {
+        print("elements, onDisposed:")
+    })
+
+_ = errors
+    .subscribe(onNext: { (error: Error) in
+         print("errors, onNext: \(error)")
+    }, onError: {
+         print("errors, onError: \($0)")
+     }, onCompleted: {
+         print("errors, onCompleted:")
+     }, onDisposed: {
+        print("errors, onDisposed:")
+     })
+```
+        
+出力結果
+```
+elements, onNext: A
+elements, onCompleted:
+elements, onDisposed:
+errors, onNext: test
+errors, onCompleted:
+errors, onDisposed:
+```
