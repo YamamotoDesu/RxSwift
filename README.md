@@ -530,4 +530,49 @@ import RxSwift
 }
 
 ```
-        
+
+## Singleをmaterializeする
+```swift
+var flag = false
+
+let result = Observable.of(1, 2)
+    .flatMap { _ -> Observable<Event<String>> in
+        let observable = Single<String>.create { observer in
+            // 2.
+            if flag {
+                observer(.success("A"))
+            } else {
+                observer(.error(TestError.test))
+            }
+ 
+            flag = !flag
+
+            return Disposables.create()
+        }
+         // 3.
+        return observable.asObservable().materialize()
+ }
+
+_ = result
+     .elements()
+    .subscribe(onNext: {
+        print("elements, onNext: \($0)")
+    }, onError: {
+     }, onCompleted: {
+        print("elements, onCompleted:")
+    }, onDisposed: {
+        print("elements, onDisposed:")
+    })
+
+_ = result
+    .errors()
+     .subscribe(onNext: {
+         print("errors, onNext: \($0)")
+     }, onError: {
+         print("errors, onError: \($0)")
+    }, onCompleted: {
+        print("errors, onCompleted:")
+     }, onDisposed: {
+         print("errors, onDisposed:")
+})
+```
