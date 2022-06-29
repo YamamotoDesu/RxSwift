@@ -576,3 +576,12 @@ _ = result
          print("errors, onDisposed:")
 })
 ```
+
+ログ出力
+```
+elements, onNext: A
+elements, onCompleted:
+elements, onDisposed:
+errors, onNext: test
+errors, onCompleted:
+```
